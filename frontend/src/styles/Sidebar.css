@@ -118,6 +118,12 @@
   color: var(--accent-cyan);
 }
 
+.sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .logout-btn {
   width: 100%;
   margin-top: 8px;
@@ -134,6 +140,25 @@
 /* ------------------ OVERLAY ------------------ */
 .sidebar-overlay {
   display: none;
+}
+
+/* ------------------ THEME TOGGLE ------------------ */
+
+.theme-toggle {
+  margin-top: auto;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-inset);
 }
 
 /* ------------------ MOBILE ------------------ */

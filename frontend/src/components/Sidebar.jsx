@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import "../styles/Sidebar.css";
 
 export default function Sidebar({ open, onClose }) {
   const { user, logout } = useAuth();
   const isAdmin = user?.role === "admin";
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -28,24 +30,30 @@ export default function Sidebar({ open, onClose }) {
         </div>
 
         {/* NAV */}
-        <nav className="sidebar-nav">
-          <NavLink to="/" end className="nav-link">
-            Overview
-          </NavLink>
-
-          <NavLink to="/tasks" className="nav-link">
-            {isAdmin ? "All Tasks" : "My Tasks"}
-          </NavLink>
-
-          <NavLink to="/deadlines" className="nav-link">
-            Deadline Watch
-          </NavLink>
-
-          {isAdmin && (
-            <NavLink to="/users" className="nav-link">
-              Team &amp; Access
+        <nav className="sidebar-wrapper">
+          <div className="sidebar-nav navlinks">
+            <NavLink to="/" end className="nav-link">
+              Overview
             </NavLink>
-          )}
+
+            <NavLink to="/tasks" className="nav-link">
+              {isAdmin ? "All Tasks" : "My Tasks"}
+            </NavLink>
+
+            <NavLink to="/deadlines" className="nav-link">
+              Deadline Watch
+            </NavLink>
+
+            {isAdmin && (
+              <NavLink to="/users" className="nav-link">
+                Team &amp; Access
+              </NavLink>
+            )}
+          </div>
+
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === "dark" ? "🌙 Dark mode" : "☀️ Light mode"}
+          </button>
         </nav>
 
         {/* FOOTER */}

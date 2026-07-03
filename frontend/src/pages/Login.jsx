@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import "../styles/Login.css";
 
 export default function Login() {
@@ -12,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { toggleTheme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +70,10 @@ export default function Login() {
               </span>
             ))}
           </div>
+
+          <button className="login-theme-toggle" onClick={toggleTheme}>
+            Toggle theme
+          </button>
         </div>
 
         <div className="footer-text">

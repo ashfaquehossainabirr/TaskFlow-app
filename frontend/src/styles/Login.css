@@ -208,6 +208,18 @@
   cursor: pointer;
 }
 
+.login-theme-toggle {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  background: transparent;
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+}
+
 /* ------------------ RESPONSIVE ------------------ */
 
 /* Tablets */

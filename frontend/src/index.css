@@ -31,6 +31,32 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+/* ================== LIGHT THEME ================== */
+html[data-theme="light"] {
+  --bg-void: #f6f8fb;
+  --bg-panel: #ffffff;
+  --bg-panel-raised: #f0f4f8;
+  --bg-inset: #eef2f6;
+
+  --border-hairline: #d6dee6;
+  --border-hairline-soft: #e5ebf1;
+
+  --text-primary: #0b1017;
+  --text-secondary: #425466;
+  --text-muted: #6b7c8f;
+
+  --accent-cyan: #0ea5b7;
+  --accent-cyan-dim: #bfecef;
+
+  --status-todo: #7d8fa3;
+  --status-progress: #2563eb;
+  --status-delivered: #059669;
+  --status-cancelled: #dc2626;
+  --status-hold: #d97706;
+
+  --urgent-glow: #dc2626;
+}
+
 * {
   box-sizing: border-box;
 }
