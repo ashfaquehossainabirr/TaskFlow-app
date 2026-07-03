@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import PageShell from '../components/PageShell';
-import UserFormModal from '../components/UserFormModal';
-import api from '../api/axios';
+import { useEffect, useState } from "react";
+import PageShell from "../components/PageShell";
+import UserFormModal from "../components/UserFormModal";
+import api from "../api/axios";
+import "../styles/Users.css";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ export default function Users() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/users');
+      const res = await api.get("/users");
       setUsers(res.data);
     } finally {
       setLoading(false);
@@ -27,7 +28,7 @@ export default function Users() {
     if (userId) {
       await api.put(`/users/${userId}`, form);
     } else {
-      await api.post('/users', form);
+      await api.post("/users", form);
     }
   };
 
@@ -37,7 +38,7 @@ export default function Users() {
       await api.delete(`/users/${u._id}`);
       setUsers((list) => list.filter((x) => x._id !== u._id));
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete user');
+      alert(err.response?.data?.message || "Failed to delete user");
     }
   };
 
@@ -47,114 +48,89 @@ export default function Users() {
       subtitle="Create admin and employee accounts, and manage who can log in."
       actions={
         <button
+          className="primary-btn"
           onClick={() => {
             setEditingUser(null);
             setShowForm(true);
-          }}
-          style={{
-            background: 'var(--accent-cyan)',
-            color: '#0b1017',
-            border: 'none',
-            borderRadius: 8,
-            padding: '10px 18px',
-            fontSize: 13.5,
-            fontWeight: 700,
-            cursor: 'pointer',
           }}
         >
           + New user
         </button>
       }
     >
-      <div
-        style={{
-          background: 'var(--bg-panel)',
-          border: '1px solid var(--border-hairline-soft)',
-          borderRadius: 'var(--radius-lg)',
-          overflow: 'hidden',
-        }}
-      >
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              {['Name', 'Email', 'Role', 'Department', 'Status', ''].map((h) => (
-                <th
-                  key={h}
-                  style={{
-                    textAlign: 'left',
-                    padding: '10px 16px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: 'var(--text-muted)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    borderBottom: '1px solid var(--border-hairline-soft)',
-                  }}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {!loading && users.length === 0 && (
+      <div className="users-panel">
+        <div className="table-wrapper">
+          <table className="users-table">
+            <thead>
               <tr>
-                <td colSpan={6} style={{ padding: '40px 16px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                  No users yet.
-                </td>
+                {["Name", "Email", "Role", "Department", "Status", ""].map(
+                  (h) => (
+                    <th key={h}>{h}</th>
+                  )
+                )}
               </tr>
-            )}
-            {users.map((u) => (
-              <tr key={u._id}>
-                <td style={tdStyle}>{u.name}</td>
-                <td style={{ ...tdStyle }} className="mono">
-                  {u.email}
-                </td>
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                      color: u.role === 'admin' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                    }}
-                  >
-                    {u.role}
-                  </span>
-                </td>
-                <td style={tdStyle}>{u.department || '—'}</td>
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: u.isActive ? 'var(--status-delivered)' : 'var(--status-cancelled)',
-                    }}
-                  >
-                    {u.isActive ? 'Active' : 'Deactivated'}
-                  </span>
-                </td>
-                <td style={tdStyle}>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <button
-                      onClick={() => {
-                        setEditingUser(u);
-                        setShowForm(true);
-                      }}
-                      style={iconBtnStyle}
+            </thead>
+
+            <tbody>
+              {!loading && users.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="empty-state">
+                    No users yet.
+                  </td>
+                </tr>
+              )}
+
+              {users.map((u) => (
+                <tr key={u._id}>
+                  <td data-label="Name">{u.name}</td>
+                  <td data-label="Email" className="mono">
+                    {u.email}
+                  </td>
+                  <td data-label="Role">
+                    <span
+                      className={`role ${
+                        u.role === "admin" ? "admin" : ""
+                      }`}
                     >
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(u)} style={{ ...iconBtnStyle, color: 'var(--status-cancelled)' }}>
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      {u.role}
+                    </span>
+                  </td>
+                  <td data-label="Department">
+                    {u.department || "—"}
+                  </td>
+                  <td data-label="Status">
+                    <span
+                      className={`status ${
+                        u.isActive ? "active" : "inactive"
+                      }`}
+                    >
+                      {u.isActive ? "Active" : "Deactivated"}
+                    </span>
+                  </td>
+                  <td data-label="Actions">
+                    <div className="action-buttons">
+                      <button
+                        className="icon-btn"
+                        onClick={() => {
+                          setEditingUser(u);
+                          setShowForm(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="icon-btn danger"
+                        onClick={() => handleDelete(u)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showForm && (
@@ -171,20 +147,3 @@ export default function Users() {
     </PageShell>
   );
 }
-
-const tdStyle = {
-  padding: '14px 16px',
-  fontSize: 13.5,
-  color: 'var(--text-primary)',
-  borderBottom: '1px solid var(--border-hairline-soft)',
-};
-
-const iconBtnStyle = {
-  background: 'transparent',
-  border: '1px solid var(--border-hairline)',
-  color: 'var(--text-secondary)',
-  borderRadius: 6,
-  padding: '5px 10px',
-  fontSize: 12,
-  cursor: 'pointer',
-};
