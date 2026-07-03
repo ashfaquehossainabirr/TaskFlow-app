@@ -76,6 +76,12 @@ export default function Login() {
 
       {/* RIGHT PANEL */}
       <div className="login-right">
+        {/* MOBILE BRAND LOGO */}
+        <div className="mobile-brand">
+          <div className="brand-logo">T</div>
+          <span className="brand-name">TaskFlow</span>
+        </div>
+
         <form className="login-form" onSubmit={handleSubmit}>
           <h2>Sign in</h2>
           <p className="form-subtitle">
@@ -91,7 +97,7 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
+              placeholder="Enter your email"
             />
           </div>
 
@@ -102,7 +108,7 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Enter your password"
             />
           </div>
 
