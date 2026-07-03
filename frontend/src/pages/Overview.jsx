@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PageShell from '../components/PageShell';
 import StatsCards from '../components/StatsCards';
 import TaskTable from '../components/TaskTable';
+import TaskDetailModal from '../components/TaskDetailModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -12,6 +13,7 @@ export default function Overview() {
   const [stats, setStats] = useState(null);
   const [urgentTasks, setUrgentTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [detailTaskId, setDetailTaskId] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -50,8 +52,11 @@ export default function Overview() {
       <TaskTable
         tasks={urgentTasks}
         isAdmin={false}
+        onRowClick={(task) => setDetailTaskId(task._id)}
         emptyLabel="Nothing urgent right now — all deadlines are more than 3 days out."
       />
+
+      {detailTaskId && <TaskDetailModal taskId={detailTaskId} onClose={() => setDetailTaskId(null)} />}
     </PageShell>
   );
 }

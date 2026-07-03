@@ -23,7 +23,7 @@ const tdStyle = {
   verticalAlign: 'middle',
 };
 
-export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDelete, emptyLabel }) {
+export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDelete, onRowClick, emptyLabel }) {
   if (!tasks || tasks.length === 0) {
     return (
       <div
@@ -50,6 +50,9 @@ export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDe
         overflow: 'hidden',
       }}
     >
+      <style>{`
+        .task-row:hover { background: var(--bg-panel-raised); }
+      `}</style>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -65,7 +68,12 @@ export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDe
           </thead>
           <tbody>
             {tasks.map((task) => (
-              <tr key={task._id}>
+              <tr 
+                key={task._id}
+                onClick={() => onRowClick && onRowClick(task)}
+                style={onRowClick ? { cursor: 'pointer' } : undefined}
+                className={onRowClick ? 'task-row' : undefined}
+              >
                 <td style={tdStyle}>
                   <div style={{ fontWeight: 600 }}>{task.title}</div>
                   {task.description && (
@@ -111,7 +119,7 @@ export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDe
                 <td style={tdStyle}>
                   <DeadlineChip deadline={task.deadline} status={task.status} />
                 </td>
-                <td style={tdStyle}>
+                <td style={tdStyle} onClick={(e) => e.stopPropagation()}>
                   {onStatusChange ? (
                     <select
                       value={task.status}
@@ -137,7 +145,7 @@ export default function TaskTable({ tasks, isAdmin, onStatusChange, onEdit, onDe
                   )}
                 </td>
                 {isAdmin && (
-                  <td style={tdStyle}>
+                  <td style={tdStyle} onClick={(e) => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button onClick={() => onEdit(task)} style={iconBtnStyle}>
                         Edit

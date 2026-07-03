@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PageShell from '../components/PageShell';
 import TaskTable from '../components/TaskTable';
 import TaskFormModal from '../components/TaskFormModal';
+import TaskDetailModal from '../components/TaskDetailModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { STATUS_LABELS } from '../utils/deadline';
@@ -18,6 +19,7 @@ export default function Tasks() {
 
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [detailTaskId, setDetailTaskId] = useState(null);
 
   const loadTasks = async () => {
     setLoading(true);
@@ -149,6 +151,7 @@ export default function Tasks() {
           setShowForm(true);
         }}
         onDelete={handleDelete}
+        onRowClick={(task) => setDetailTaskId(task._id)}
         emptyLabel={loading ? 'Loading tasks…' : 'No tasks match your filters.'}
       />
 
@@ -164,6 +167,8 @@ export default function Tasks() {
           onSubmit={handleSubmit}
         />
       )}
+
+      {detailTaskId && <TaskDetailModal taskId={detailTaskId} onClose={() => setDetailTaskId(null)} />}
     </PageShell>
   );
 }

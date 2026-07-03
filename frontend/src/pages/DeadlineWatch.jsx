@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageShell from '../components/PageShell';
 import TaskTable from '../components/TaskTable';
+import TaskDetailModal from '../components/TaskDetailModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -9,6 +10,7 @@ export default function DeadlineWatch() {
   const isAdmin = user.role === 'admin';
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [detailTaskId, setDetailTaskId] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -67,8 +69,11 @@ export default function DeadlineWatch() {
         tasks={tasks}
         isAdmin={isAdmin}
         onStatusChange={handleStatusChange}
+        onRowClick={(task) => setDetailTaskId(task._id)}
         emptyLabel="Nothing due within 3 days. You're clear."
       />
+
+      {detailTaskId && <TaskDetailModal taskId={detailTaskId} onClose={() => setDetailTaskId(null)} />}
     </PageShell>
   );
 }
