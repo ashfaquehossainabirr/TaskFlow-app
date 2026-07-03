@@ -16,9 +16,32 @@ export default function StatsCards({ stats, loading }) {
         marginBottom: 28,
       }}
     >
+      <style>{`
+        .stat-card {
+          transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+        .stat-card:hover {
+          transform: translateY(-3px);
+          background: var(--bg-panel-raised);
+          border-color: var(--glow);
+          box-shadow: 0 10px 24px -8px var(--glow), 0 0 0 1px var(--glow) inset;
+        }
+        .stat-card:hover .stat-card-bar {
+          width: 5px;
+          box-shadow: 0 0 12px var(--glow);
+        }
+        .stat-card:hover .stat-card-value {
+          color: var(--glow);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .stat-card { transition: none; }
+          .stat-card:hover { transform: none; }
+        }
+      `}</style>
       {CARDS.map((c) => (
         <div
           key={c.key}
+          className="stat-card"
           style={{
             background: 'var(--bg-panel)',
             border: '1px solid var(--border-hairline-soft)',
@@ -26,9 +49,12 @@ export default function StatsCards({ stats, loading }) {
             padding: '18px 18px 16px',
             position: 'relative',
             overflow: 'hidden',
+            cursor: 'default',
+            '--glow': c.color,
           }}
         >
           <div
+            className="stat-card-bar"
             style={{
               position: 'absolute',
               top: 0,
@@ -36,6 +62,7 @@ export default function StatsCards({ stats, loading }) {
               width: 3,
               height: '100%',
               background: c.color,
+              transition: 'width 0.18s ease, box-shadow 0.18s ease',
             }}
           />
           <div
@@ -50,7 +77,10 @@ export default function StatsCards({ stats, loading }) {
           >
             {c.label}
           </div>
-          <div className="mono" style={{ fontSize: 30, fontWeight: 600, color: 'var(--text-primary)' }}>
+          <div
+            className="mono stat-card-value"
+            style={{ fontSize: 30, fontWeight: 600, color: 'var(--text-primary)', transition: 'color 0.18s ease' }}
+          >
             {loading ? '—' : stats?.[c.key] ?? 0}
           </div>
         </div>
