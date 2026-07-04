@@ -1,45 +1,60 @@
 import "../styles/EmployeeDetailModal.css";
 
+const MINI_STATS = [
+  { key: "todo", label: "To Do", color: "todo" },
+  { key: "in-progress", label: "In Progress", color: "progress" },
+  { key: "hold", label: "On Hold", color: "hold" },
+  { key: "delivered", label: "Delivered", color: "delivered" },
+  { key: "cancelled", label: "Cancelled", color: "cancelled" },
+];
+
 export default function EmployeeDetailModal({ employee, onClose }) {
   return (
     <>
-      <div className="modal-overlay" onClick={onClose} />
+      {/* Overlay */}
+      <div className="employee-modal-overlay" onClick={onClose} />
 
+      {/* Modal */}
       <div className="employee-modal">
-        <header className="modal-header">
+        {/* Header */}
+        <div className="employee-modal-header">
           <div>
-            <h2>{employee.name}</h2>
-            <p className="mono">{employee.email}</p>
+            <div className="employee-name">{employee.name}</div>
+            <div className="employee-email mono">{employee.email}</div>
             {employee.department && (
-              <span className="modal-dept">{employee.department}</span>
+              <div className="employee-dept">{employee.department}</div>
             )}
           </div>
 
-          <button className="modal-close" onClick={onClose}>✕</button>
-        </header>
+          <button className="modal-close-btn" onClick={onClose}>
+            ✕
+          </button>
+        </div>
 
-        <section className="modal-content">
-          <div className="modal-stat">
-            <span>Total Projects</span>
-            <strong>{employee.projects}</strong>
-          </div>
+        {/* Project summary */}
+        <div className="employee-modal-projects">
+          <div className="project-count mono">{employee.projects}</div>
+          <div className="project-label">Projects</div>
+        </div>
 
-          <div className="modal-stat">
-            <span>Total Tasks</span>
-            <strong>{employee.total}</strong>
-          </div>
+        {/* Stats */}
+        <div className="employee-stats modal-stats">
+          {MINI_STATS.map((s) => (
+            <div key={s.key} className={`mini-stat ${s.color}`}>
+              <div className="mini-stat-bar" />
+              <div className="mini-stat-value mono">
+                {employee[s.key] ?? 0}
+              </div>
+              <div className="mini-stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
 
-          <div className="modal-grid">
-            {Object.entries(employee).map(([key, value]) =>
-              typeof value === "number" ? (
-                <div key={key} className="modal-grid-item">
-                  <span>{key}</span>
-                  <strong>{value}</strong>
-                </div>
-              ) : null
-            )}
-          </div>
-        </section>
+        {/* Footer */}
+        <div className="employee-footer">
+          <span className="mono">{employee.total}</span>{" "}
+          task{employee.total === 1 ? "" : "s"} total
+        </div>
       </div>
     </>
   );
