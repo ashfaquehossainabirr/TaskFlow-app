@@ -8,9 +8,46 @@ import {
 import { cssVar } from "../utils/getCssColor";
 import "../styles/EmployeeTaskChart.css";
 
+/* REGISTER */
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+/* CENTER TEXT PLUGIN */
+const centerTextPlugin = {
+  id: "centerText",
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    const total = chart.config.options.plugins.centerText?.total;
+
+    if (!total) return;
+
+    ctx.save();
+
+    ctx.font = "700 22px var(--font-mono)";
+    ctx.fillStyle = cssVar("--text-primary");
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(total, width / 2, height / 2 - 6);
+
+    ctx.font = "11px var(--font-body)";
+    ctx.fillStyle = cssVar("--text-muted");
+    ctx.fillText("tasks", width / 2, height / 2 + 14);
+
+    ctx.restore();
+  },
+};
+
+ChartJS.register(centerTextPlugin);
+
 export default function EmployeeTaskChart({ employee }) {
+  if (!employee) return null;
+
+  const total =
+    (employee.todo ?? 0) +
+    (employee["in-progress"] ?? 0) +
+    (employee.hold ?? 0) +
+    (employee.delivered ?? 0) +
+    (employee.cancelled ?? 0);
+
   const STATUS_COLORS = [
     cssVar("--status-todo"),
     cssVar("--status-progress"),
@@ -47,7 +84,14 @@ export default function EmployeeTaskChart({ employee }) {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "68%",
+    interaction: {
+      intersect: true,
+      mode: "nearest",
+    },
     plugins: {
+      centerText: {
+        total,
+      },
       legend: {
         position: "bottom",
         labels: {
@@ -60,6 +104,8 @@ export default function EmployeeTaskChart({ employee }) {
         },
       },
       tooltip: {
+        position: "nearest",
+        caretPadding: 14,
         backgroundColor: cssVar("--bg-panel-raised"),
         titleColor: cssVar("--text-primary"),
         bodyColor: cssVar("--text-secondary"),
