@@ -1,3 +1,4 @@
+import EmployeeTaskChart from "./EmployeeTaskChart";
 import "../styles/EmployeeDetailModal.css";
 
 const MINI_STATS = [
@@ -49,6 +50,21 @@ export default function EmployeeDetailModal({ employee, onClose }) {
             </div>
           ))}
         </div>
+
+        {/* STATS */}
+        <div className="employee-stats modal-stats">
+          {MINI_STATS.map((s) => (
+            <div key={s.key} className={`mini-stat ${s.color}`}>
+              <div className="mini-stat-bar" />
+              <div className="mini-stat-value mono">
+                {employee[s.key] ?? 0}
+              </div>
+              <div className="mini-stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <EmployeeTaskChart employee={employee} />
 
         {/* Footer */}
         <div className="employee-footer">
