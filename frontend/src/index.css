@@ -70,9 +70,9 @@ body,
 body {
   margin: 0;
   background: var(--bg-void);
-  background-image:
+  /* background-image:
     radial-gradient(circle at 10% 0%, rgba(79, 216, 224, 0.06), transparent 40%),
-    radial-gradient(circle at 90% 100%, rgba(74, 158, 255, 0.05), transparent 45%);
+    radial-gradient(circle at 90% 100%, rgba(74, 158, 255, 0.05), transparent 45%); */
   color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
