@@ -5,6 +5,7 @@ import StatsCards from '../components/StatsCards';
 import TaskTable from '../components/TaskTable';
 import TaskDetailModal from '../components/TaskDetailModal';
 import { useAuth } from '../context/AuthContext';
+import TaskStatsChart from "../components/TaskStatsChart";
 import api from '../api/axios';
 
 export default function Overview() {
@@ -40,7 +41,9 @@ export default function Overview() {
     >
       <StatsCards stats={stats} loading={loading} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+      <TaskStatsChart stats={stats} />
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "40px", marginBottom: 14 }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, margin: 0 }}>
           Deadline Watch <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>· due in 3 days or less</span>
         </h2>
