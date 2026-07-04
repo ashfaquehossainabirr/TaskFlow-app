@@ -63,6 +63,12 @@ export default function Sidebar({ open, onClose }) {
                 Team &amp; Access
               </NavLink>
             )}
+
+            {isAdmin && (
+              <NavLink to="/employee-stats" className="nav-link">
+                Employee Stats
+              </NavLink>
+            )}
           </div>
 
           <button className="theme-toggle" onClick={toggleTheme}>

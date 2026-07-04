@@ -4,6 +4,7 @@ import Overview from './pages/Overview';
 import Tasks from './pages/Tasks';
 import DeadlineWatch from './pages/DeadlineWatch';
 import Users from './pages/Users';
+import EmployeeStats from './pages/EmployeeStats';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -39,6 +40,15 @@ export default function App() {
         element={
           <ProtectedRoute adminOnly>
             <Users />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/employee-stats"
+        element={
+          <ProtectedRoute adminOnly>
+            <EmployeeStats />
           </ProtectedRoute>
         }
       />

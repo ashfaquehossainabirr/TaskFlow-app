@@ -1,5 +1,6 @@
 const express = require('express');
 const Task = require('../models/Task');
+const User = require('../models/User');
 const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
@@ -58,6 +59,63 @@ router.get('/stats', async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch stats', error: err.message });
+  }
+});
+
+// @route   GET /api/tasks/stats/by-employee
+// @desc    Per-employee breakdown: distinct project count + count per status. Admin only.
+router.get('/stats/by-employee', authorize('admin'), async (req, res) => {
+  try {
+    const employees = await User.find({ role: 'employee' }).select('name email department').sort({ name: 1 });
+
+    const statusAgg = await Task.aggregate([
+      { $group: { _id: { employee: '$assignedTo', status: '$status' }, count: { $sum: 1 } } },
+    ]);
+
+    const projectAgg = await Task.aggregate([
+      {
+        $group: {
+          _id: '$assignedTo',
+          projects: { $addToSet: '$projectName' },
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const statusMap = {};
+    statusAgg.forEach((row) => {
+      const empId = String(row._id.employee);
+      if (!statusMap[empId]) statusMap[empId] = {};
+      statusMap[empId][row._id.status] = row.count;
+    });
+
+    const projectMap = {};
+    projectAgg.forEach((row) => {
+      projectMap[String(row._id)] = { projectCount: row.projects.length, total: row.total };
+    });
+
+    const result = employees.map((emp) => {
+      const id = String(emp._id);
+      const statuses = statusMap[id] || {};
+      const proj = projectMap[id] || { projectCount: 0, total: 0 };
+      return {
+        _id: emp._id,
+        name: emp.name,
+        email: emp.email,
+        department: emp.department,
+        projects: proj.projectCount,
+        total: proj.total,
+        todo: statuses.todo || 0,
+        'in-progress': statuses['in-progress'] || 0,
+        hold: statuses.hold || 0,
+        delivered: statuses.delivered || 0,
+        cancelled: statuses.cancelled || 0,
+      };
+    });
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch employee stats', error: err.message });
   }
 });
 
