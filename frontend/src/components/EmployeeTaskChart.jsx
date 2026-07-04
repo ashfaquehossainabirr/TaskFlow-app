@@ -10,6 +10,40 @@ import "../styles/EmployeeTaskChart.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+/* ================== CENTER TEXT PLUGIN ================== */
+const centerTextPlugin = {
+  id: "centerText",
+  afterDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+
+    if (!meta || !meta.data || !meta.data.length) return;
+
+    const total = chart.config.data.datasets[0].data.reduce(
+      (a, b) => a + b,
+      0
+    );
+
+    const { x, y } = meta.data[0];
+
+    ctx.save();
+
+    // TOTAL NUMBER
+    ctx.font = "700 22px var(--font-mono)";
+    ctx.fillStyle = cssVar("--text-primary");
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(total, x, y - 6);
+
+    // LABEL
+    ctx.font = "11px var(--font-body)";
+    ctx.fillStyle = cssVar("--text-muted");
+    ctx.fillText("Total Tasks", x, y + 14);
+
+    ctx.restore();
+  },
+};
+
 export default function EmployeeTaskChart({ employee }) {
   const STATUS_COLORS = [
     cssVar("--status-todo"),
@@ -46,7 +80,7 @@ export default function EmployeeTaskChart({ employee }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: "68%",
+    cutout: "70%",
 
     interaction: {
       intersect: true,
@@ -58,7 +92,6 @@ export default function EmployeeTaskChart({ employee }) {
         position: "bottom",
         labels: {
           usePointStyle: true,
-          pointStyle: "circle",
           boxWidth: 8,
           padding: 16,
           color: cssVar("--text-secondary"),
@@ -68,14 +101,13 @@ export default function EmployeeTaskChart({ employee }) {
       tooltip: {
         position: "nearest",
         yAlign: "bottom",
-        xAlign: "center",
         caretPadding: 14,
-        padding: 10,
         backgroundColor: cssVar("--bg-panel-raised"),
         titleColor: cssVar("--text-primary"),
         bodyColor: cssVar("--text-secondary"),
         borderColor: cssVar("--border-hairline"),
         borderWidth: 1,
+        padding: 10,
       },
     },
   };
@@ -84,7 +116,11 @@ export default function EmployeeTaskChart({ employee }) {
     <div className="employee-chart-card">
       <div className="chart-title">Task Breakdown</div>
       <div className="chart-wrapper">
-        <Doughnut data={data} options={options} />
+        <Doughnut
+          data={data}
+          options={options}
+          plugins={[centerTextPlugin]}
+        />
       </div>
     </div>
   );
