@@ -58,6 +58,10 @@ export default function Sidebar({ open, onClose }) {
               Deadline Watch
             </NavLink>
 
+            <NavLink to="/pending" className="nav-link">
+              Pending Tasks
+            </NavLink>
+
             {isAdmin && (
               <NavLink to="/users" className="nav-link">
                 Team &amp; Access

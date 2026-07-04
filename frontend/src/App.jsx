@@ -4,6 +4,7 @@ import Overview from './pages/Overview';
 import Tasks from './pages/Tasks';
 import DeadlineWatch from './pages/DeadlineWatch';
 import Users from './pages/Users';
+import PendingTasks from "./pages/PendingTasks";
 import EmployeeStats from './pages/EmployeeStats';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -52,6 +53,9 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route path="/pending" element={<PendingTasks />} />
+      
       <Route path="*" element={<ProtectedRoute><Overview /></ProtectedRoute>} />
     </Routes>
   );
