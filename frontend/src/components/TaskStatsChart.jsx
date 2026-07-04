@@ -10,17 +10,37 @@ import "../styles/TaskStatsChart.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+/* ================= CENTER TEXT PLUGIN ================= */
+const centerTextPlugin = {
+  id: "centerText",
+  afterDraw(chart, args, pluginOptions) {
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+
+    const centerX = (chartArea.left + chartArea.right) / 2;
+    const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = "700 22px Inter, system-ui, sans-serif";
+    ctx.fillStyle = cssVar("--text-primary");
+    ctx.fillText(pluginOptions.total ?? 0, centerX, centerY - 6);
+
+    ctx.font = "500 11px Inter, system-ui, sans-serif";
+    ctx.fillStyle = cssVar("--text-muted");
+    ctx.fillText("Total Tasks", centerX, centerY + 14);
+
+    ctx.restore();
+  },
+};
+
 export default function TaskStatsChart({ stats }) {
   if (!stats) return null;
 
   const data = {
-    labels: [
-      "To Do",
-      "In Progress",
-      "On Hold",
-      "Delivered",
-      "Cancelled",
-    ],
+    labels: ["To Do", "In Progress", "On Hold", "Delivered", "Cancelled"],
     datasets: [
       {
         data: [
@@ -46,7 +66,14 @@ export default function TaskStatsChart({ stats }) {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "70%",
+    interaction: {
+      intersect: true,
+      mode: "nearest",
+    },
     plugins: {
+      centerText: {
+        total: stats.total,
+      },
       legend: {
         position: "bottom",
         labels: {
@@ -58,6 +85,10 @@ export default function TaskStatsChart({ stats }) {
         },
       },
       tooltip: {
+        position: "nearest",
+        caretPadding: 14,
+        xAlign: "center",
+        yAlign: "bottom",
         backgroundColor: cssVar("--bg-panel-raised"),
         titleColor: cssVar("--text-primary"),
         bodyColor: cssVar("--text-secondary"),
@@ -75,7 +106,11 @@ export default function TaskStatsChart({ stats }) {
       </div>
 
       <div className="chart-wrapper">
-        <Doughnut data={data} options={options} />
+        <Doughnut
+          data={data}
+          options={options}
+          plugins={[centerTextPlugin]}
+        />
       </div>
     </div>
   );
