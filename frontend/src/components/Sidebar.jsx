@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -7,6 +8,19 @@ export default function Sidebar({ open, onClose }) {
   const { user, logout } = useAuth();
   const isAdmin = user?.role === "admin";
   const { theme, toggleTheme } = useTheme();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setShowLogoutConfirm(false);
+    };
+
+    if (showLogoutConfirm) {
+      window.addEventListener("keydown", onKey);
+    }
+
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showLogoutConfirm]);
 
   return (
     <>
@@ -69,11 +83,49 @@ export default function Sidebar({ open, onClose }) {
             </span>
           </div>
 
-          <button className="logout-btn" onClick={logout}>
+          <button
+            className="logout-btn"
+            onClick={() => setShowLogoutConfirm(true)}
+          >
             Sign out
           </button>
         </div>
       </aside>
+
+      {showLogoutConfirm && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <h3>Sign out?</h3>
+            <p>
+              Are you sure you want to sign out of your account?
+            </p>
+
+            <div className="modal-actions">
+              <button
+                className="modal-btn secondary"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="modal-btn danger"
+                onClick={logout}
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
