@@ -33,7 +33,7 @@ const centerTextPlugin = {
     ctx.fillText(total, centerX, centerY - 6);
 
     /* LABEL */
-    ctx.font = "12px var(--font-body)";
+    ctx.font = "16px var(--font-body)";
     ctx.fillStyle = cssVar("--text-muted");
     ctx.fillText("tasks", centerX, centerY + 18);
 
