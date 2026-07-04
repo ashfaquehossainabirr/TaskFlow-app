@@ -8,34 +8,29 @@ import {
 import { cssVar } from "../utils/getCssColor";
 import "../styles/EmployeeTaskChart.css";
 
-/* REGISTER CORE */
+/* REGISTER */
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 /* CENTER TEXT PLUGIN */
 const centerTextPlugin = {
   id: "centerText",
-  afterDraw(chart) {
-    const { ctx, chartArea } = chart;
-    const total = chart.options.plugins.centerText?.total;
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    const total = chart.config.options.plugins.centerText?.total;
 
     if (!total) return;
 
-    const centerX = (chartArea.left + chartArea.right) / 2;
-    const centerY = (chartArea.top + chartArea.bottom) / 2;
-
     ctx.save();
 
-    /* BIG NUMBER */
-    ctx.font = "700 30px var(--font-mono)";
+    ctx.font = "700 22px var(--font-mono)";
     ctx.fillStyle = cssVar("--text-primary");
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(total, centerX, centerY - 6);
+    ctx.fillText(total, width / 2, height / 2 - 6);
 
-    /* LABEL */
-    ctx.font = "12px var(--font-body)";
+    ctx.font = "11px var(--font-body)";
     ctx.fillStyle = cssVar("--text-muted");
-    ctx.fillText("tasks", centerX, centerY + 18);
+    ctx.fillText("tasks", width / 2, height / 2 + 14);
 
     ctx.restore();
   },
@@ -52,6 +47,14 @@ export default function EmployeeTaskChart({ employee }) {
     (employee.hold ?? 0) +
     (employee.delivered ?? 0) +
     (employee.cancelled ?? 0);
+
+  const STATUS_COLORS = [
+    cssVar("--status-todo"),
+    cssVar("--status-progress"),
+    cssVar("--status-hold"),
+    cssVar("--status-delivered"),
+    cssVar("--status-cancelled"),
+  ];
 
   const data = {
     labels: [
@@ -70,15 +73,9 @@ export default function EmployeeTaskChart({ employee }) {
           employee.delivered ?? 0,
           employee.cancelled ?? 0,
         ],
-        backgroundColor: [
-          cssVar("--status-todo"),
-          cssVar("--status-progress"),
-          cssVar("--status-hold"),
-          cssVar("--status-delivered"),
-          cssVar("--status-cancelled"),
-        ],
+        backgroundColor: STATUS_COLORS,
+        hoverBackgroundColor: STATUS_COLORS,
         borderWidth: 0,
-        hoverOffset: 6,
       },
     ],
   };
@@ -86,34 +83,28 @@ export default function EmployeeTaskChart({ employee }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: "70%",
-
-    /* TOOLTIP ONLY ON ARCS */
+    cutout: "68%",
     interaction: {
+      intersect: true, // ✅ tooltip only on arcs
       mode: "nearest",
-      intersect: true,
     },
-
     plugins: {
       centerText: {
         total,
       },
-
       legend: {
         position: "bottom",
         labels: {
           usePointStyle: true,
+          pointStyle: "circle",
           boxWidth: 8,
           padding: 16,
           color: cssVar("--text-secondary"),
           font: { size: 11 },
         },
       },
-
-      /* TOOLTIP OUTSIDE CHART */
       tooltip: {
-        position: "average",
-        yAlign: "bottom",
+        position: "nearest",
         caretPadding: 14,
         backgroundColor: cssVar("--bg-panel-raised"),
         titleColor: cssVar("--text-primary"),
