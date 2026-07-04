@@ -17,6 +17,7 @@ const centerTextPlugin = {
   afterDraw(chart) {
     const { ctx, chartArea } = chart;
     const total = chart.options.plugins.centerText?.total;
+
     if (!total) return;
 
     const centerX = (chartArea.left + chartArea.right) / 2;
@@ -24,17 +25,17 @@ const centerTextPlugin = {
 
     ctx.save();
 
-    /* BIG TOTAL NUMBER */
-    ctx.font = "700 42px var(--font-mono)";
+    /* BIG NUMBER */
+    ctx.font = "700 30px var(--font-mono)";
     ctx.fillStyle = cssVar("--text-primary");
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(total, centerX, centerY - 6);
 
     /* LABEL */
-    ctx.font = "13px var(--font-body)";
+    ctx.font = "12px var(--font-body)";
     ctx.fillStyle = cssVar("--text-muted");
-    ctx.fillText("tasks", centerX, centerY + 26);
+    ctx.fillText("tasks", centerX, centerY + 18);
 
     ctx.restore();
   },
